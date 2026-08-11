@@ -1,0 +1,27 @@
+{
+  "_kommentar": "Byt inget här om du inte lägger till fler kontor. Kontors-ID är hämtade och verifierade.",
+  "offices": {
+    "Karlstad": "800d5-6b779-ca557-a09b9-5fa85-64439-008ae-ef1a4",
+    "Helsingborg": "a8426-ac925-93441-0dac5-570b1-036de-02cb1-09e90"
+  },
+  "_fler_kontor": "Lägg till som \"Namn\": \"slug\", t.ex. \"Malmo\": \"malmo\". Scrapern slår upp ID:t själv.",
+  "_monday": "Token ska ligga i miljövariabeln MONDAY_TOKEN, inte här.",
+  "monday_token": "",
+  "monday_board_id": "5102001651",
+  "_monday_columns": "Verifierat mot boarden 'Nya objekt – SkandiaMäklarna'. Statuskolumnen lämnas medvetet utanför.",
+  "monday_columns": {
+    "kontor": "text_mm64v8da",
+    "adress": "text_mm647bkb",
+    "ort": "text_mm645e2g",
+    "bostadstyp": "text_mm641wpj",
+    "pris": "numeric_mm64nkm9",
+    "boarea_kvm": "numeric_mm64pbfc",
+    "maklare": "text_mm643g2j",
+    "maklare_epost": "email_mm64keab",
+    "maklare_telefon": "phone_mm64xqgm",
+    "url": "link_mm64m9t1",
+    "har_film": "text_mm64rbay",
+    "publicerad": "date_mm64q87k"
+  },
+  "_publiceringsdatum": "Publicerad = date_mm64q87k. Datumkallan (Fran sidan / Forst sedd) finns bara i Excel. Vill du ha den i Monday: skapa en textkolumn och lagg in \"datumkalla\": \"<kolumn-id>\" har."
+}

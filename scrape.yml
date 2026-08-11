@@ -1,0 +1,63 @@
+name: Bevaka SkandiaMäklarna
+
+on:
+  schedule:
+    - cron: "0 6-19 * * *"
+
+  workflow_dispatch:
+    inputs:
+      lage:
+        description: "Vilken sorts körning?"
+        type: choice
+        default: "normal"
+        options:
+          - "test - hamtar 2 objekt till Monday, ror inte baslinjen"
+          - "baslinje - sparar allt befintligt tyst, skickar inget"
+          - "normal"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: skm-scraper
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Testkörning
+        if: startsWith(inputs.lage, 'test')
+        env:
+          MONDAY_TOKEN: ${{ secrets.MONDAY_TOKEN }}
+        run: python skm_scraper.py --limit 2 --no-excel
+
+      - name: Bygg baslinje
+        if: startsWith(inputs.lage, 'baslinje')
+        env:
+          MONDAY_TOKEN: ${{ secrets.MONDAY_TOKEN }}
+        run: python skm_scraper.py --first-run --no-excel
+
+      - name: Sök av kontoren
+        if: inputs.lage == 'normal' || inputs.lage == ''
+        env:
+          MONDAY_TOKEN: ${{ secrets.MONDAY_TOKEN }}
+        run: python skm_scraper.py --no-excel
+
+      - name: Spara vad som setts
+        if: ${{ !startsWith(inputs.lage, 'test') }}
+        run: |
+          git config user.name "skm-scraper"
+          git config user.email "bot@cbmedia.se"
+          git add state.json || true
+          git diff --staged --quiet || git commit -m "Avsokning $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push
